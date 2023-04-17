@@ -6,6 +6,7 @@ from common.constants import DATE_PATTERN_SLASH_Y_M_D, DATE_PATTERN_SLASH_D_M_Y,
     DATE_PATTERN_DASH_D_M_Y, DATE_PATTERN_DASH_Y_M_D, DATE_PATTERN_DASH_M_D_Y, DATE_PATTERN_SLASH_M_D_Y, \
     DATE_PATTERN_SLASH_Y_D_M, DATE_PATTERN_DASH_Y_D_M
 import re
+import shutil
 
 logger = logging.getLogger(__name__)
 
@@ -18,8 +19,12 @@ def create_folder(folder_path: str) -> None:
         logger.info(f'Folder exists')
 
 
-def get_filename_from_path(file_path: str) -> str:
+def get_file_name_from_path(file_path: str) -> str:
     return os.path.basename(file_path)
+
+
+def get_directory_from_path(file_path: str) -> str:
+    return os.path.dirname(file_path)
 
 
 def is_file_exist(file_path: str) -> bool:
@@ -109,3 +114,7 @@ def is_completed(success_file_path, unsuccess_file_path):
         return True
 
     return False
+
+
+def archive_file(src_file, dst_dir):
+    shutil.move(src_file, dst_dir)

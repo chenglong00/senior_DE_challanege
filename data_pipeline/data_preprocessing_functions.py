@@ -82,10 +82,10 @@ def success_unsuccess_application_split(df):
     return df_success, df_unsuccess
 
 
-def persist_processed_data(df, input_file_name, is_success):
-    parent_dir = get_current_path()
-    success_output_folder = f"{parent_dir}/data/success"
-    unsuccess_output_folder = f"{parent_dir}/data/unsuccess"
+def persist_processed_data(df, input_file_name, output_path, is_success):
+    parent_dir = output_path
+    success_output_folder = f"{parent_dir}/output/success"
+    unsuccess_output_folder = f"{parent_dir}/output/unsuccess"
 
     for output_folder in [success_output_folder, unsuccess_output_folder]:
         if not is_folder_exist(output_folder):

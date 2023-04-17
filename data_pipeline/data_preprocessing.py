@@ -4,7 +4,7 @@ from data_pipeline.data_preprocessing_functions import split_first_last_name, to
     is_above_age, generate_membership_id, is_valid_mobile, is_valid_email, is_success_application, \
     success_unsuccess_application_split, persist_processed_data
 import logging
-from common.utils import get_filename_from_path, is_file_exist
+from common.utils import get_file_name_from_path, get_directory_from_path
 
 logger = logging.getLogger(__name__)
 
@@ -12,7 +12,8 @@ logger = logging.getLogger(__name__)
 class DataPreprocessing:
 
     def __init__(self, input_dataframe: DataFrame, input_file_path):
-        self.input_file_name = get_filename_from_path(input_file_path)
+        self.input_file_name = get_file_name_from_path(input_file_path)
+        self.data_dir = get_directory_from_path(input_file_path)
         self.df = input_dataframe
         self.df_success = DataFrame()
         self.df_unsuccess = DataFrame()
@@ -37,10 +38,10 @@ class DataPreprocessing:
         unsuccess_file_path = ""
         if not self.df_success.empty:
             success_file_path = persist_processed_data(self.df_success, input_file_name=self.input_file_name,
-                                                       is_success=True)
+                                                       output_path=self.data_dir, is_success=True)
         if not self.df_success.empty:
             unsuccess_file_path = persist_processed_data(self.df_unsuccess, input_file_name=self.input_file_name,
-                                                         is_success=False)
+                                                         output_path=self.data_dir, is_success=False)
         return success_file_path, unsuccess_file_path
 
     def run(self):
