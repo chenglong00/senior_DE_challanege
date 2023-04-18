@@ -1,8 +1,7 @@
 import unittest
-from data_pipeline.data_preprocessing import DataPreprocessing
-from data_pipeline.data_loader import DataLoader
+from data_pipelines.preprocessing.application_processing import ApplicationProcessing
+from data_pipelines.loaders.application_data_loader import ApplicationDataLoader
 from common.utils import get_current_path, is_file_exist
-from common.exceptions import DataPipelineOperationalException
 import logging
 
 logger = logging.getLogger(__name__)
@@ -14,9 +13,9 @@ class DataPreprocessingTestCase(unittest.TestCase):
         current_path = get_current_path()
         right_path = f"{current_path}/data/applications_dataset_1.csv"
         right_type = "csv"
-        self._data_loader = DataLoader(right_path, right_type)
+        self._data_loader = ApplicationDataLoader(right_path, right_type)
         self._df = self._data_loader.load_data()
-        self._data_preprocessing = DataPreprocessing(self._df, right_path)
+        self._data_preprocessing = ApplicationProcessing(self._df, right_path)
 
     def test_data_cleaning(self) -> None:
         self._data_preprocessing.data_cleaning()

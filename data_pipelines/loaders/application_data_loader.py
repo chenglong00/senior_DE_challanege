@@ -1,13 +1,22 @@
 from common.utils import is_in_list, is_file_exist
 from common.exceptions import DataPipelineOperationalException
 from common.constants import ACCEPTABLE_FILE_TYPES
-import pandas as pd
 from pandas import DataFrame
-from data_pipeline.data_loader_functions import load_csv_file, load_txt_file
+
 from typing import List
 
+import pandas as pd
 
-class DataLoader:
+
+def load_txt_file(file, header=0, delimiter='\t'):
+    return pd.read_csv(file, header=header, delimiter=delimiter)
+
+
+def load_csv_file(file, header=0):
+    return load_txt_file(file, delimiter=',', header=header)
+
+
+class ApplicationDataLoader:
 
     def __init__(self, input_file: str, input_file_type: str):
         if not is_file_exist(input_file):

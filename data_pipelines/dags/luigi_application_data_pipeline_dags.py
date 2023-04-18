@@ -1,8 +1,7 @@
 import luigi
-from data_pipeline.data_loader import DataLoader
-from data_pipeline.data_preprocessing import DataPreprocessing
+from data_pipelines.loaders import DataLoader
+from data_pipelines.preprocessing.application_processing import ApplicationProcessing
 from common.exceptions import DataPipelineException
-from luigi.target import FileSystemTarget, Target
 from common.utils import get_current_path, is_completed, archive_file, get_directory_from_path, create_folder
 import os
 
@@ -30,7 +29,7 @@ class ProcessFileTask(luigi.Task):
                 try:
                     data_loader = DataLoader(input_file, input_file_type)
                     df = data_loader.load_data()
-                    data_processing = DataPreprocessing(df, input_file)
+                    data_processing = ApplicationProcessing(df, input_file)
                     success_file_path, unsuccess_file_path = data_processing.run()
                     if not is_completed(success_file_path, unsuccess_file_path):
                         archive_file(retry_folder, archive_folder)
@@ -44,6 +43,6 @@ class ProcessFileTask(luigi.Task):
 if __name__ == '__main__':
     # Process file
     current_path = get_current_path()
-    data_path = os.path.join(current_path, "..\data")
+    data_path = os.path.join(current_path, "../../data")
     process_file = ProcessFileTask(data_folder_path=data_path)
     process_file.run()

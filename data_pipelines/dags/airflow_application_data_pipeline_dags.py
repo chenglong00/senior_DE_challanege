@@ -1,13 +1,8 @@
 from datetime import datetime, timedelta
-from airflow import DAG
 from airflow.decorators import dag, task
-from airflow.operators.bash import BashOperator
-from airflow.models import Variable
-from airflow.operators.python import PythonOperator
-from airflow.sensors.filesystem import FileSensor
 import os
-from data_pipeline.data_loader import DataLoader
-from data_pipeline.data_preprocessing import DataPreprocessing
+from data_pipelines.loaders import DataLoader
+from data_pipelines.preprocessing.application_processing import ApplicationProcessing
 from common.utils import is_completed, get_current_path
 from common.exceptions import DataPipelineException
 import glob
@@ -43,7 +38,7 @@ def ProcessFiles():
             if input_file:
                 data_loader = DataLoader(input_file, input_file_type)
                 df = data_loader.load_data()
-                data_processing = DataPreprocessing(df, input_file)
+                data_processing = ApplicationProcessing(df, input_file)
                 success_file_path, unsuccess_file_path = data_processing.run()
                 if not is_completed(success_file_path, unsuccess_file_path):
                     raise DataPipelineException(f"Error, output file not found. {e}")

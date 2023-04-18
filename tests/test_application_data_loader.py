@@ -1,5 +1,5 @@
 import unittest
-from data_pipeline.data_loader import DataLoader
+from data_pipelines.loaders.application_data_loader import ApplicationDataLoader
 from common.utils import get_current_path
 from common.exceptions import DataPipelineOperationalException
 import logging
@@ -19,24 +19,24 @@ class DataLoaderTestCase(unittest.TestCase):
 
     def test_data_loader_init(self) -> None:
         # right path
-        self.assertIsInstance(DataLoader(self.right_path, self.right_type), DataLoader)
+        self.assertIsInstance(ApplicationDataLoader(self.right_path, self.right_type), ApplicationDataLoader)
 
         # wrong path
         with self.assertRaises(DataPipelineOperationalException) as context:
-            DataLoader(self.wrong_path, self.right_type)
+            ApplicationDataLoader(self.wrong_path, self.right_type)
 
         logger.debug(context.exception)
         self.assertTrue(f"Input file doesn't exist: {self.wrong_path}" in str(context.exception))
 
         # wrong file type
         with self.assertRaises(DataPipelineOperationalException) as context:
-            DataLoader(self.right_path, self.wrong_file_type)
+            ApplicationDataLoader(self.right_path, self.wrong_file_type)
 
         logger.debug(context.exception)
         self.assertTrue(f"Input file type is not allowed: {self.wrong_file_type}" in str(context.exception))
 
     def test_load_data(self):
-        data_loader = DataLoader(self.right_path, self.right_type)
+        data_loader = ApplicationDataLoader(self.right_path, self.right_type)
         df = data_loader.load_data()
 
         self.assertIsInstance(df, DataFrame)
